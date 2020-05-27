@@ -74,8 +74,8 @@ return $return;
 }
 
 function getWord($word_eng,$lang){
-	$words_eng = array("No saved waybills", "Saved waybills", "Create waybill", "Customer", "Choose", "Date", "Choosen waybill","Number","Article","Amount","Price per unit","Delete","£", "No customer","Waybill","Created", "None chosen");
-	$words_swe = array("Inga sparade följesedlar", "Sparade följesedlar", "Skapa följesedel", "Kund", "Välj", "Datum", "Vald följesedel","Nummer","Artikel","Antal","a-pris","Radera","Kronor", "Ingen kund","Följesedel","Skapad", "Ingen vald");
+	$words_eng = array("No saved waybills", "Saved waybills", "Create waybill", "Customer", "Choose", "Date", "Choosen waybill","Number","Article","Amount","Price per unit","Delete","£", "No customer","Waybill","Created", "None chosen","Start","Choose waybill");
+	$words_swe = array("Inga sparade följesedlar", "Sparade följesedlar", "Skapa följesedel", "Kund", "Välj", "Datum", "Vald följesedel","Nummer","Artikel","Antal","a-pris","Radera","Kronor", "Ingen kund","Följesedel","Skapad", "Ingen vald","Start","Välj följsedel");
 
 	//$key = array_search($word_eng, $words_eng);
 	$key = array_search(strtolower($word_eng), array_map('strtolower',$words_eng));

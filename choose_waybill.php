@@ -7,7 +7,7 @@ require_once("functions.php");
 
 $db = new db();
 $html = new html();
-$sess = new sess();
+$sess = new sess("eng");//or "swe"
 $lang = $sess->lang();
 ?>
 <!DOCTYPE html>
@@ -28,7 +28,7 @@ $lang = $sess->lang();
 
 <?php
 
-printMenu();
+echo printMenu(array(getWord("Start",$lang)=>"index.php", getWord("Choose waybill", $lang)=>"choose_waybill.php"));
 
 $sql = "SELECT w.id, w.created_date, c.legal_name, c.other_name FROM waybill w LEFT JOIN customer c ON ( id_customer = c.id )";
 $sql2 = "SELECT * FROM customer";

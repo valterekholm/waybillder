@@ -22,6 +22,7 @@ position: absolute;
 z-index: 10;
 width: 100%;
 background-color: #333;
+top: 0;
 }
 .wbMenuOffset{
 padding-top: 50px;
