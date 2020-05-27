@@ -1,0 +1,265 @@
+<?php
+require_once("db.php");
+require_once("html.php");
+require_once("functions.php");
+require_once("sess.php");
+
+error_reporting(E_ALL);
+
+//$BODY_ELEMENT = "body"; //TODO: make user defined
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+	<link rel="stylesheet" href="../jquery-ui.css">
+	<!-- link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.1/themes/cupertino/jquery-ui.css" -->
+	<link rel="stylesheet" href="style.css" type="text/css">
+        <script src="../jquery-3.4.1.js"></script>
+	<!--script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script-->
+        <script src="../jquery-ui.js"></script>
+	<!--script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.12.1/jquery-ui.js"></script-->
+        <script src="waybillder.js" type="text/javascript"></script>
+        <script src="dialogesBoxes.js" type="text/javascript"></script>
+        <script>
+      //using jquery ui
+
+            $(function () {
+                $("#palette p").draggable({helper: "clone"});
+            });
+
+            $(function () {
+                $(".waybill").droppable({
+                    drop: function (event, ui) {
+                        console.log("Dropped at " + this.id);
+                        var draggable = ui.draggable[0]; //varför [0]?
+                        console.log(draggable);
+                        /*save*/
+
+                        var wbId = getAfter_(this.id);
+
+			var artId = getAfter_(draggable.id);
+
+                        var queryArgs = "add_article_to_waybill=yes&waybill_id=" + wbId + "&article_id=" + artId;
+
+			var amount = null;
+
+			if(draggable.className.indexOf("empty") > -1){
+				console.log("Empty tag");
+			}
+			else{
+				//amount = prompt("Ange antal:"); //ange i input istället (som standard number)
+				//if(innerHtml.indexOf("'")>-1){	alert("Found quote"); }
+			}
+
+                        if (amount != null) {
+                            queryArgs = queryArgs + "&amount=" + encodeURI(amount);
+                        }
+
+                        postAjax("ajax_operations.php", queryArgs, function (resp) {
+                            alert(resp);
+                            location.reload();
+                        });
+
+
+
+                        $(this)
+                                .addClass("ui-state-highlight");
+                    }
+                });
+            });
+
+  $( function() {
+    $( "#leftside" ).resizable();
+  } );
+
+            function getAfter_(text) {
+                var pos_ = text.lastIndexOf("_");
+                pos_++;
+                return text.substr(pos_);
+            }
+
+        </script>
+    </head>
+    <body>
+
+<?php
+$db = new db();
+$html = new html();
+$sess = new sess();
+
+$lang = $sess->lang();
+
+printMenu();
+
+$wb = $sess->getChoosenWaybill();//else null
+$customer = getWord("No customer", $lang);
+
+
+echo "<div style='position:fixed; top:0; right:0; width:40px; height:40px; background:green;font-size:40px' onClick='showGuide()'><a href='#'>?</a></div>";
+
+
+
+$sql_c = "SELECT * FROM customer";
+$res = $db->select_query($sql_c);
+$rows_c = $res->fetchAll();
+
+
+//insert into html_element (id, name, is_empty_tag) values (1, 'table', 0);
+$sql = "select * from article";
+
+$res = $db->select_query($sql);
+error_log(print_r($res, true));
+$rows_a = $res->fetchAll();
+
+if(count($rows_a) == 0){
+	$html->p("Du måste registrera en kund. <a href='#'>OK</a>");
+}
+else{
+	foreach ($rows_a as $row) {
+	}
+}
+
+if($wb > 0){
+$sql_ar = "SELECT * FROM article_row ar LEFT JOIN articlerow_article ON ( ar.id = id_article_row ) LEFT JOIN article a ON (id_article = a.id) WHERE id_waybill = $wb";
+error_log($sql_ar);
+$res_ar = $db->select_query($sql_ar);
+$rows_ar = $res_ar->fetchAll();	
+
+if(count($rows_ar) == 0){
+	$html->p("Inga rader");
+}
+
+$sql_cu = "SELECT * FROM waybill w LEFT JOIN customer c ON ( w.id_customer = c.id ) WHERE w.id = $wb";
+$res_cu = $db->select_query($sql_cu);
+$row_cu = $res_cu->fetch();
+
+$customer = "-";
+if(!empty($row_cu)){
+	$customer = $row_cu["legal_name"] . " / " . $row_cu["other_name"];
+}
+
+}
+
+?>
+<div id="leftSide">
+        <div id="u-customer-dialog-form">
+            <form>
+                <div>
+                    <label>C id</label>
+                    <input id="cId" readonly>
+                </div>
+                <div>
+                    <label>Name</label>
+                    <input id="cName">
+                </div>
+                <div>
+                    <label>Name2</label>
+                    <input id="cName2">
+                </div>
+
+            </form>
+        </div>
+</div><div id="waybill_<?=$wb?>" class="waybill" style="margin: 0 auto; display: inline-block; background:white; min-height: 100px">
+<table>
+<caption><?=getWord("Customer", $lang) .": ". $customer?></caption>
+<tr><th><?=getWord("Article", $lang)?></th><th><?=getWord("Amount", $lang)?></th><th><?=getWord("Price per unit", $lang)?></th><th><?=getWord("£", $lang)?></th><th></th></tr>
+<ul id="articleRows">
+<?php
+if(!empty($rows_ar))
+foreach($rows_ar as $ar){
+	$subtotal = $ar["amount"] * $ar["price"];
+	//error_log($subtotal);
+	?>
+	<tr><li>
+	<td><input value="<?=$ar["name"]?>"></input></td>
+	<td><input value="<?=$ar["amount"]?>"></td>
+	<td><input value="<?=$ar["price"]?>"></td>
+	<td><?=$subtotal?></td>
+	<td><a href='#'><?=getWord("Delete",$lang)?></a></td>
+	</li></tr>
+	<?php
+}
+?>
+</ul>
+</table>
+</div><div id="palette">
+	<div id="articles">
+        <?php
+        $html->h3("Articles:");
+        foreach ($rows_a as $row) {
+            	//$html->p($row["id"] . " " . $row["name"], array("id" => "a_" . $row["id"], "class" => ""));
+        }
+        ?>
+
+        </div>
+            <form id="add_article">
+                <fieldset class="form">
+                    <legend>Add article</legend>
+                    <input type="text" id="a_name" name="a_name" placeholder="name">
+                    <input type="button" onClick="addArticle()" value="add">
+                </fieldset>
+            </form>
+	    <form id="alter_article">
+		<fieldset class="form">
+			<legend>Edit article</legend>
+			<input type="text" id="edit_a_name" name="edit_a_name" placeholder="article name">
+		</fieldset>
+	    </form>
+
+	</div>
+
+
+<?php
+?>
+</div>
+
+
+
+<script>
+
+window.onload = function(){
+console.log("load");
+var arts = [];
+<?php
+
+        foreach ($rows_a as $row) {
+            	echo "console.log(".json_encode($row).");\n";
+            	echo "var art = ".json_encode($row).";\n";
+?>
+		arts.push(art);
+		var name = art.name;
+		var id = "a_" + art.id;
+		var elem = document.createElement("p");
+		elem.innerHTML = name;
+		elem.id = id;
+		document.querySelector("#articles").appendChild(elem);
+<?php
+        }
+?>
+	console.log(arts);
+}//onload
+
+	function addArticle(){
+		var src_val = document.querySelector("#a_name").value;
+		console.log(css);
+		console.log(document.querySelector("#css_e_css"));
+		var queryArgs = "add_element_css=yes&element=" + element + "&css=" + css + "&wep=" + wep;
+		postAjax("ajax_operations.php", queryArgs, function (resp) {
+			alert(resp);
+			location.reload();
+		});
+	}
+
+	function deleteElementCss(id){ //delete_e_css"]) && isset($_GET["e_css_id"
+		var queryArgs = "delete_e_css=yes&e_css_id=" + id;
+		getAjax("ajax_operations.php?"+queryArgs, function (resp) {
+			alert(resp);
+			location.reload();
+		});
+	}
+        </script>
+
+
+
+    </body>
+</html>

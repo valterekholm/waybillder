@@ -1,0 +1,199 @@
+* {
+  box-sizing: border-box;
+}
+
+.full-height {
+  height: 99%;
+  overflow:hidden;
+}
+body, html{
+height: 100%;
+margin: 0;
+}
+a{ text-decoration: none; }
+input, select{
+height: 1em;
+}
+button, input[type="button"]{
+height: 2em;
+}
+#wbMenu{
+position: absolute;
+z-index: 10;
+width: 100%;
+background-color: #333;
+}
+.wbMenuOffset{
+padding-top: 50px;
+}
+
+#draggable { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }
+#droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
+#palette{display: inline-block; width: 15%; border-left: 3px solid gray; padding: 5px 0 5px 5px;}
+#palette p, .brick{ width: 95%; height: 2em; border: 1px solid gray; padding: 5px; }
+#palette_inner{
+width: 100%;
+height:77%;
+overflow: auto;
+}
+#leftSide{
+	border: 1px solid gray;
+	border-bottom: none;
+	display: inline-block;
+	width: 15%;
+	vertical-align: top;
+}
+
+p.ui-draggable-dragging{width: 199px !important;}
+
+.ui-button{
+padding: 0 1em;
+margin: -1px;/*compensate jquery changing*/
+float: right;
+}
+.ui-dialog label{
+display: inline-block;
+width: 25%;
+vertical-align: middle;
+}
+.ui-dialog input{
+width: 70%;
+}
+.deleteBtn{
+position: absolute;
+top: 0;
+right: 2px;
+line-height: 12px;
+}
+
+.cleartable, .cleartable td{
+	border: 1px solid gray;
+}
+
+.cleartable td{
+	padding: 10px;
+}
+
+section.waybill{
+vertical-align: top;
+margin: 0 auto;
+display: inline-block;
+/*background:white;*/
+min-height: 100px;
+padding: 5% 1%;
+/*background-color: rgb(255,255,255);*/
+background-image: url("bg2.png");
+transition: all 1s;
+}
+
+/*signalizing*/
+.dropHere{
+background-color: rgba(85,204,85,.5);
+}
+
+/*make table like*/
+
+section.waybill>div{
+display: table;
+width: 80%;
+border: 7px double goldenrod;
+border-color: RGBA(158,97,19, .5);
+margin: 0 auto;
+background-color: #e8e7b8;
+}
+section.waybill>div>div{
+display: table-row;
+}
+section.waybill>div>div>div{
+display: table-cell;
+padding: 8px;
+}
+
+div.caption{
+border: 2px outset #999;
+border-radius: 8px;
+border-bottom: none;
+display: table-caption !important;
+text-align: center;
+padding: 11px 0;
+background: rgba(230,230,230,.8);
+font-family: arial;
+}
+
+div.caption span{
+margin: 0 1em;
+padding: .2em .5em;
+background: rgba(255,200,200,.3);
+}
+
+.content{
+font-family: sans;
+}
+
+.content article{
+	width: 800px;
+	margin: 10px auto;
+	background-color: #eee;
+}
+
+.content h1, .content h2, .content h3{
+	text-align: center;
+}
+
+
+.infotable, .infotable td{
+	border: 4px solid gray;
+}
+.infotable td{
+	border-radius: 10px;
+}
+
+#getInfo{
+	cursor: pointer;
+	text-align: center;
+}
+
+#classes p, #element_css p{
+width: 200px;
+border: 1px solid gray;
+border-radius:3px;
+word-break: break-all;
+}
+
+ul.horizontal_menu{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+  font-family: arial;
+}
+.horizontal_menu li{
+	float:left;
+	height: 50px;/*setting height for whole menu*/
+}
+.horizontal_menu li a{
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.highlight{
+	background-color: #777;
+}
+
+fieldset.form select, fieldset.form input, fieldset.form textarea{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.waybill{
+	border: 1px solid gray;
+	width: 70%;
+}
+
+.waybill table{
+	width:100%;
+}
